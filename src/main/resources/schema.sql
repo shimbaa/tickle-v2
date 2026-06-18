@@ -2,7 +2,7 @@
 -- 1. 공연장 테이블 (마스터)
 -- ==========================================
 CREATE TABLE hall (
-                      hall_id SERIAL PRIMARY KEY,
+                      hall_id BIGSERIAL PRIMARY KEY,
                       hall_name VARCHAR(50) NOT NULL,
                       hall_address VARCHAR(100) NOT NULL,
                       hall_created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -12,7 +12,7 @@ CREATE TABLE hall (
 -- 2. 기본 좌석 테이블 (마스터)
 -- ==========================================
 CREATE TABLE seat (
-                      seat_id SERIAL PRIMARY KEY,
+                      seat_id BIGSERIAL PRIMARY KEY,
                       hall_id INTEGER NOT NULL REFERENCES hall(hall_id),
                       seat_grade VARCHAR(10) NOT NULL,
                       seat_row VARCHAR(5) NOT NULL,
