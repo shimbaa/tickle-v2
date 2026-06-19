@@ -13,7 +13,7 @@ CREATE TABLE hall (
 -- ==========================================
 CREATE TABLE seat (
                       seat_id BIGSERIAL PRIMARY KEY,
-                      hall_id INTEGER NOT NULL REFERENCES hall(hall_id),
+                      hall_id BIGINT NOT NULL REFERENCES hall(hall_id),
                       seat_grade VARCHAR(10) NOT NULL,
                       seat_row VARCHAR(5) NOT NULL,
                       seat_number VARCHAR(10) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE member (
 -- ==========================================
 CREATE TABLE performance (
                              performance_id BIGSERIAL PRIMARY KEY,
-                             hall_id INTEGER NOT NULL REFERENCES hall(hall_id),
+                             hall_id BIGINT NOT NULL REFERENCES hall(hall_id),
                              performance_title VARCHAR(100) NOT NULL,
                              performance_start_date TIMESTAMPTZ NOT NULL,
                              performance_end_date TIMESTAMPTZ NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE performance (
 CREATE TABLE performance_seat (
                                   performance_seat_id BIGSERIAL PRIMARY KEY,
                                   performance_id BIGINT NOT NULL REFERENCES performance(performance_id),
-                                  seat_id INTEGER NOT NULL REFERENCES seat(seat_id),
+                                  seat_id BIGINT NOT NULL REFERENCES seat(seat_id),
                                   seat_grade VARCHAR(10) NOT NULL,
                                   seat_row VARCHAR(5) NOT NULL,
                                   seat_number VARCHAR(10) NOT NULL,
