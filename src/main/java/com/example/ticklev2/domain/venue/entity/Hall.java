@@ -1,4 +1,4 @@
-package com.example.ticklev2.domain.reservation.entity;
+package com.example.ticklev2.domain.venue.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;

@@ -1,5 +1,7 @@
 package com.example.ticklev2.domain.reservation.entity;
 
+import com.example.ticklev2.domain.performance.entity.Performance;
+import com.example.ticklev2.domain.venue.entity.Seat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

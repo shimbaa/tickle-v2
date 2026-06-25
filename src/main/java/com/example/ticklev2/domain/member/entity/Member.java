@@ -1,6 +1,5 @@
 package com.example.ticklev2.domain.member.entity;
 
-import com.example.ticklev2.domain.reservation.entity.MemberRole;
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import lombok.AccessLevel;
