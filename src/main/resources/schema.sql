@@ -61,7 +61,7 @@ CREATE TABLE performance_seat (
                                   seat_number VARCHAR(10) NOT NULL,
                                   seat_price INTEGER NOT NULL,
                                   seat_status VARCHAR(10) NOT NULL DEFAULT 'AVAILABLE',
-                                  CONSTRAINT chk_seat_status CHECK (seat_status IN ('AVAILABLE','RESERVED')),
+                                  CONSTRAINT chk_seat_status CHECK (seat_status IN ('AVAILABLE','HELD','RESERVED')),
 
     -- [무결성 필수] 동일 공연에 동일 물리 좌석이 중복 등록되는 치명적인 데이터 오류를 물리적으로 차단
                                   CONSTRAINT uq_performance_seat UNIQUE (performance_id, seat_id)
