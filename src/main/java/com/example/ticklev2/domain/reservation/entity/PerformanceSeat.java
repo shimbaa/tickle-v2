@@ -57,4 +57,22 @@ public class PerformanceSeat {
             String seatRow, String seatNumber, Integer seatPrice) {
         return new PerformanceSeat(performance, seat, seatGrade, seatRow, seatNumber, seatPrice);
     }
+
+    public void hold() {
+        if (this.seatStatus != SeatStatus.AVAILABLE) {
+            throw new IllegalStateException("선점 가능한 상태가 아닙니다.");
+        }
+        this.seatStatus = SeatStatus.HELD;
+    }
+
+    public void release() {
+        this.seatStatus = SeatStatus.AVAILABLE;
+    }
+
+    public void reserve() {
+        if (this.seatStatus != SeatStatus.HELD) {
+            throw new IllegalStateException("선점된 좌석만 예매로 전환할 수 있습니다.");
+        }
+        this.seatStatus = SeatStatus.RESERVED;
+    }
 }
