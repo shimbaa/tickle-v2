@@ -11,4 +11,6 @@ public interface SeatHoldRepository extends JpaRepository<SeatHold, Long> {
     List<SeatHold> findAllByExpiresAtBefore(OffsetDateTime now);
 
     Optional<SeatHold> findByPerformanceSeatId(Long performanceSeatId);
+
+    Optional<SeatHold> findByHoldToken(String holdToken);
 }
