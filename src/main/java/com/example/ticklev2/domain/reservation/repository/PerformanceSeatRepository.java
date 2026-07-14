@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface PerformanceSeatRepository extends JpaRepository<PerformanceSeat, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT ps FROM PerformanceSeat ps WHERE ps.performance.id = :id AND ps.seatStatus = 'AVAILABLE'")
-    Optional<PerformanceSeat> findAvailableSeatWithLock(@Param("id") Long id);
+    @Query("SELECT ps FROM PerformanceSeat ps WHERE ps.id = :performanceSeatId AND ps.seatStatus = 'AVAILABLE'")
+    Optional<PerformanceSeat> findAvailableSeatWithLock(@Param("performanceSeatId") Long performanceSeatId);
 
 }
