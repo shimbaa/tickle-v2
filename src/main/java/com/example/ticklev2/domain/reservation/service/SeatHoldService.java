@@ -3,6 +3,7 @@ package com.example.ticklev2.domain.reservation.service;
 
 import com.example.ticklev2.domain.member.entity.Member;
 import com.example.ticklev2.domain.member.repository.MemberRepository;
+import com.example.ticklev2.domain.reservation.dto.response.SeatHoldResponseDto;
 import com.example.ticklev2.domain.reservation.entity.PerformanceSeat;
 import com.example.ticklev2.domain.reservation.entity.SeatHold;
 import com.example.ticklev2.domain.reservation.repository.PerformanceSeatRepository;
@@ -22,7 +23,7 @@ public class SeatHoldService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public List<SeatHold> hold(List<Long> performanceSeatIds, Long memberId) {
+    public SeatHoldResponseDto hold(List<Long> performanceSeatIds, Long memberId) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
@@ -46,6 +47,10 @@ public class SeatHoldService {
 
         seatHoldRepository.saveAll(seatHolds);
 
-        return seatHolds;
+        return new SeatHoldResponseDto(
+                seatHolds.stream()
+                        .map(SeatHold::getHoldToken)
+                        .toList()
+        );
     }
 }
