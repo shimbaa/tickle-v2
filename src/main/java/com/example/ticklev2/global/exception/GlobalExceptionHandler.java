@@ -1,0 +1,66 @@
+package com.example.ticklev2.global.exception;
+
+import static com.example.ticklev2.global.exception.ErrorCode.INTERNAL_SERVER_ERROR;
+import static com.example.ticklev2.global.exception.ErrorCode.INVALID_INPUT_VALUE;
+import static com.example.ticklev2.global.exception.ErrorCode.INVALID_TYPE_VALUE;
+import static com.example.ticklev2.global.exception.ErrorCode.METHOD_NOT_ALLOWED;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+@RestControllerAdvice
+@Slf4j
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity<Object> handleNotAcceptable(HttpMediaTypeNotAcceptableException ex) {
+        return new ResponseEntity<>(ErrorResponse.of(INVALID_TYPE_VALUE), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    protected ResponseEntity<ErrorResponse> handleHandlerMethodValidation(HandlerMethodValidationException e) {
+        return new ResponseEntity<>(ErrorResponse.of(INVALID_INPUT_VALUE), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException e) {
+        final ErrorResponse response = ErrorResponse.of(e);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException e) {
+        final ErrorResponse response = ErrorResponse.of(METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
+        final ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE, e.getBindingResult());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+        final ErrorCode errorCode = e.getErrorCode();
+        final ErrorResponse response = ErrorResponse.of(errorCode, e.getErrors());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus().value()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+        log.error("Exception : " + e);
+        final ErrorResponse response = ErrorResponse.of(INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
