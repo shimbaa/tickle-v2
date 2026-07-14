@@ -8,6 +8,8 @@ import com.example.ticklev2.domain.reservation.entity.PerformanceSeat;
 import com.example.ticklev2.domain.reservation.entity.SeatHold;
 import com.example.ticklev2.domain.reservation.repository.PerformanceSeatRepository;
 import com.example.ticklev2.domain.venue.repository.SeatHoldRepository;
+import com.example.ticklev2.global.exception.BusinessException;
+import com.example.ticklev2.global.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ public class SeatHoldService {
     public SeatHoldResponseDto hold(List<Long> performanceSeatIds, Long memberId) {
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         List<Long> sortedIds = performanceSeatIds.stream()
                 .sorted()
@@ -37,7 +39,7 @@ public class SeatHoldService {
         for (Long seatId : sortedIds) {
             PerformanceSeat performanceSeat = performanceSeatRepository
                     .findAvailableSeatWithLock(seatId)
-                    .orElseThrow(() -> new IllegalStateException("이미 선점되었거나 존재하지 않는 좌석입니다."));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.SEAT_ALREADY_HELD));
 
             performanceSeat.hold();
 

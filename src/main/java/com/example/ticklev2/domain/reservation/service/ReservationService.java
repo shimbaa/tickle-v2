@@ -10,6 +10,8 @@ import com.example.ticklev2.domain.reservation.entity.SeatHold;
 import com.example.ticklev2.domain.reservation.repository.ReservationRepository;
 import com.example.ticklev2.domain.reservation.repository.ReservationSeatRepository;
 import com.example.ticklev2.domain.venue.repository.SeatHoldRepository;
+import com.example.ticklev2.global.exception.BusinessException;
+import com.example.ticklev2.global.exception.ErrorCode;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -29,18 +31,18 @@ public class ReservationService {
     public ReservationConfirmResponseDto confirm(List<String> holdTokens, Long memberId) {
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 1. holdToken으로 SeatHold 조회 및 유효성 검증
         List<SeatHold> seatHolds = holdTokens.stream()
                 .map(token -> seatHoldRepository.findByHoldToken(token)
-                        .orElseThrow(() -> new IllegalStateException("유효하지 않은 선점 토큰입니다.")))
+                        .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_HOLD_TOKEN)))
                 .toList();
 
         // 2. 만료 여부 확인
         seatHolds.forEach(hold -> {
             if (hold.isExpired()) {
-                throw new IllegalStateException("선점이 만료되었습니다.");
+                throw new BusinessException(ErrorCode.SEAT_HOLD_EXPIRED);
             }
         });
 
@@ -89,11 +91,11 @@ public class ReservationService {
 
         // 1. Reservation 조회
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 예매입니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESERVATION_NOT_FOUND));
 
         // 2. 본인 예매인지 확인
         if (!reservation.getMember().getId().equals(memberId)) {
-            throw new IllegalStateException("본인의 예매만 취소할 수 있습니다.");
+            throw new BusinessException(ErrorCode.RESERVATION_CANCEL_FORBIDDEN);
         }
 
         // 3. 예매 취소
