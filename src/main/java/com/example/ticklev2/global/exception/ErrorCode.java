@@ -15,8 +15,10 @@ public enum ErrorCode {
     DATA_PROCESSING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "데이터 처리 중 오류가 발생했습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 정보를 찾을 수 없습니다."),
 
+    SEAT_NOT_AVAILABLE(HttpStatus.CONFLICT, "선점 가능한 상태의 좌석이 아닙니다."),
     INVALID_HOLD_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰 값입니다."),
     SEAT_ALREADY_HELD(HttpStatus.CONFLICT, "이미 선점되었거나 존재하지 않는 좌석입니다."),
+    SEAT_NOT_HELD(HttpStatus.CONFLICT, "선점된 좌석이 아닙니다."),
     SEAT_HOLD_EXPIRED(HttpStatus.CONFLICT, "선점이 만료되었습니다."),
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예매 정보를 찾을 수 없습니다."),
     RESERVATION_CANCEL_FORBIDDEN(HttpStatus.FORBIDDEN, "본인의 예매만 취소할 수 있습니다.");

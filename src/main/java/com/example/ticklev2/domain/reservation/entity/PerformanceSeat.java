@@ -2,6 +2,8 @@ package com.example.ticklev2.domain.reservation.entity;
 
 import com.example.ticklev2.domain.performance.entity.Performance;
 import com.example.ticklev2.domain.venue.entity.Seat;
+import com.example.ticklev2.global.exception.BusinessException;
+import com.example.ticklev2.global.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -60,7 +62,7 @@ public class PerformanceSeat {
 
     public void hold() {
         if (this.seatStatus != SeatStatus.AVAILABLE) {
-            throw new IllegalStateException("선점 가능한 상태가 아닙니다.");
+            throw new BusinessException(ErrorCode.SEAT_NOT_AVAILABLE);
         }
         this.seatStatus = SeatStatus.HELD;
     }
@@ -71,7 +73,7 @@ public class PerformanceSeat {
 
     public void reserve() {
         if (this.seatStatus != SeatStatus.HELD) {
-            throw new IllegalStateException("선점된 좌석만 예매로 전환할 수 있습니다.");
+            throw new BusinessException(ErrorCode.SEAT_NOT_HELD);
         }
         this.seatStatus = SeatStatus.RESERVED;
     }
