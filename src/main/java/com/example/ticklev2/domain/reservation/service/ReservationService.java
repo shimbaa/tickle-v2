@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReservationService {
 
+    private static final String RSV_CODE_PREFIX = "RSV-";
     private final ReservationRepository reservationRepository;
     private final ReservationSeatRepository reservationSeatRepository;
     private final SeatHoldRepository seatHoldRepository;
@@ -52,7 +53,7 @@ public class ReservationService {
                 .sum();
 
         // 4. Reservation 생성
-        String reservationCode = "RSV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        String reservationCode = RSV_CODE_PREFIX + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         Reservation reservation = Reservation.create(member, totalPrice, reservationCode);
 
         reservationRepository.save(reservation);
